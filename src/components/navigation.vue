@@ -1,9 +1,8 @@
 <template>
   <div id="holder">
     <div class="links">
-      <router-link v-if="prev" :to="prev.path" class="prev"> < prev </router-link>
-      <a :href="sourceHref" class="source"> source </a>
-      <router-link v-if="next" :to="next.path" class="next"> next > </router-link>
+      <!-- <router-link v-if="prev" :to="prev.path" class="prev"> < prev </router-link>
+      <router-link v-if="next" :to="next.path" class="next"> next > </router-link> -->
     </div>
   </div>
 </template>
@@ -47,51 +46,4 @@ export default {
 </script>
 
 <style scoped>
-
-#links {
-  display: block;
-  width: 300px;
-  height: 40px;
-  position: relative;
-}
-
-a {
-  display: block;
-  position: absolute;
-  width: 100px;
-  text-decoration: none;
-  font-weight: bold;
-  color: blue;
-}
-
-a:hover {
-  text-decoration: underline;
-}
-
-.prev {
-  left: 0px;
-  text-align: left;
-}
-
-.source {
-  left:100px;
-  text-align: center;
-}
-
-.next {
-  right: 0px;
-  text-align: right;
-}
-
-#holder {
-  width: 300px;
-  margin: auto;
-  position: relative;
-  height: 30px;
-  /*border-top: 1px dashed gray;*/
-  border-bottom: 1px dashed gray;
-  padding-top: 10px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
 </style>

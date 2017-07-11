@@ -1,20 +1,25 @@
 <template>
+
   <div id="app">
-    <a href='#/'> <h1> D3.js vs Vue.js examples </h1> </a>
-    <h2>{{ $route.name }}</h2>
-    <top-nav />
     <router-view></router-view>
+    <a href='#/'>
+      <h1> EtherGuilds </h1>
+    </a>
+
+    <top-nav />
+
   </div>
 </template>
 
 <script>
 
-import topNav from './components/demos-navigation'
+import topNav from './components/navigation'
 
 export default {
   name: 'app',
   components: { topNav }
 }
+
 </script>
 
 <style scoped>
@@ -22,7 +27,7 @@ export default {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
+  /*text-align: center;*/
   margin-top: 30px;
 }
 a {
