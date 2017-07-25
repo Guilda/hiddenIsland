@@ -8,7 +8,7 @@ import VueResource from 'vue-resource'
 Vue.use(VueResource);
 
 /* eslint-disable no-new */
-new Vue({
+var vm = new Vue({
   el: '#app',
   router,
   template: '<app/>',

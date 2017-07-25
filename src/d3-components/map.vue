@@ -11,9 +11,14 @@ Advanced:
 <template>
   <div>
     <div id="map">
+      <svg id="map_svg">
+      </svg>
+
+      <!-- <object data="static/island.svg" type="image/svg+xml"> -->
+      <!-- </object> -->
     </div>
     <div>
-      {{ position.x }} / {{ position.y }}
+      {{ $route.params.x }} / {{ $route.params.y }}
     </div>
   </div>
 </template>
@@ -22,19 +27,37 @@ Advanced:
 <script>
 var d3 = require("d3");
 import * as topojson from "topojson-client";
+import layout from './circle-layout'
+import resize from 'vue-resize-directive'
 
 window.uber_hack_context = ""
 
+const directives = {
+  resize
+}
+
 export default {
 
+  // data: function(){
+  //
+  // },
 
-  data: function(){
-    return {
-      position: { x: 0, y: 0 }
-    }
-  },
+  directives,
 
   methods: {
+    getSize () {
+      var width = this.$el.clientWidth
+      var height = this.$el.clientHeight
+      return { width, height }
+    },
+    transformSvg (g, size) {
+      size = size || this.getSize()
+      return layout.transformSvg(g, this.margin, size)
+    },
+    updateTransform (g, size) {
+      size = size || this.getSize()
+      return layout.updateTransform(g, this.margin, size)
+    },
     resize: function() {
       const size = this.getSize()
       const {g, svg, tree} = this.internaldata
@@ -50,22 +73,59 @@ export default {
 
     uber_hack_context = this;
 
-    var width = 960,
-        height = 500,
-        radius = 20;
+    var margin = {top: -5, right: -5, bottom: -5, left: -5},
+    width = 960 - margin.left - margin.right,
+    height = 900 - margin.top - margin.bottom;
 
-    var topology = hexTopology(radius, width, height);
+    var zoom = d3.zoom()
+    .scaleExtent([1, 10])
+    .on("zoom", zoomed);
+
+    const size = this.getSize()
+    const svg = d3.select("#map_svg")
+          .attr('width', size.width)
+          .attr('height', size.height)
+    // const g = this.transformSvg(svg.append('g').call(zoom), size)
+    // const g = svg.append('g').call(zoom)
+
+
+    var radius = 20;
+
+    var topology = hexTopology(radius, size.width, size.height);
 
     var projection = hexProjection(radius);
 
     var path = d3.geoPath(projection);
 
-    var svg = d3.select("#map").append("svg")
-        .attr("width", width)
-        .attr("height", height);
+    // var drag = d3.drag()
+    //     .origin(function(d) { return d; })
+    //     .on("dragstart", dragstarted)
+    //     .on("drag", dragged)
+    //     .on("dragend", dragended);
 
-    svg.append("g")
-        .attr("class", "hexagon")
+    function zoomed() {
+      // console.log("ZOOOMZOOOM")
+      // debugger
+      container.attr('transform', 'translate(' + d3.event.transform.x + ',' + d3.event.transform.y + ') scale(' + d3.event.transform.k + ')')
+      .call(zoom);
+    }
+
+    function dragstarted(d) {
+      d3.event.sourceEvent.stopPropagation();
+      d3.select(this).classed("dragging", true);
+    }
+
+    function dragged(d) {
+      d3.select(this).attr("cx", d.x = d3.event.x).attr("cy", d.y = d3.event.y);
+    }
+
+    function dragended(d) {
+      d3.select(this).classed("dragging", false);
+    }
+
+    var container = svg.append("g")
+
+    container.attr("class", "hexagon")
       .selectAll("path")
         .data(topology.objects.hexagons.geometries)
       .enter().append("path")
@@ -73,30 +133,30 @@ export default {
         .attr("class", function(d) { return d.fill ? "fill" : null; })
         .on("mousedown", mousedown)
         .on("mousemove", mousemove)
-        .on("mouseup", mouseup);
+        .on("mouseup", mouseup)
+        .call(zoom)
 
-    svg.append("path")
+    container.append("path")
         .datum(topojson.mesh(topology, topology.objects.hexagons))
         .attr("class", "mesh")
         .attr("d", path);
 
-    var border = svg.append("path")
+    var border = container.append("path")
         .attr("class", "border")
         .call(redraw);
 
     var mousing = 0;
 
     function mousedown(d) {
-      console.log(this.hack_context)
-      debugger
       mousing = d.fill ? -1 : +1;
       mousemove.apply(this, arguments);
 
-      this.position.x = 900;
+      uber_hack_context.$router.push({ path: `/${d.x}/${d.y}`})
     }
 
     function mousemove(d) {
       if (mousing) {
+
         d3.select(this).classed("fill", d.fill = mousing > 0);
         border.call(redraw);
       }
@@ -131,7 +191,9 @@ export default {
           geometries.push({
             type: "Polygon",
             arcs: [[q, q + 1, q + 2, ~(q + (n + 2 - (j & 1)) * 3), ~(q - 2), ~(q - (n + 2 + (j & 1)) * 3 + 2)]],
-            fill: Math.random() > i / n * 3
+            fill: uber_hack_context.$route.params.x == i && uber_hack_context.$route.params.y == j,
+            x: i,
+            y: j
           });
         }
       }
@@ -163,6 +225,124 @@ export default {
 </script>
 
 <style>
+
+@import url('https://fonts.googleapis.com/css?family=Bitter:400,400i&subset=latin-ext');
+svg {
+    background-color: #5E4FA2;
+    cursor: default;
+}
+
+.terrs {
+    stroke-width: 0.67px;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+    -webkit-filter: saturate(0.8) contrast(1.1);
+    filter: saturate(0.8) contrast(1.1);
+}
+
+.areas {
+    stroke-width: 0.67px;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+    opacity: 0.8;
+}
+
+.rivers {
+    fill: none;
+    stroke: #4D83AE;
+    stroke-width: 0.4px;
+    stroke-linecap: round;
+}
+
+.coastline {
+    stroke-width: 0.74px;
+    stroke: rgb(86, 86, 109);
+    stroke-linecap: round;
+}
+
+.burgs {
+    stroke-width: 0.2px;
+    opacity: 0.8;
+    font-family: verdana;
+    font-size: 2px;
+    text-anchor: middle;
+    cursor: pointer;
+}
+
+.capital {
+    fill: white;
+    stroke: black;
+    opacity: 0.8;
+}
+
+.manor {
+    stroke: none;
+    fill: black;
+    opacity: 0.8;
+}
+
+.capital:hover,
+.manor:hover {
+    stroke: blue;
+    cursor: pointer;
+}
+
+.names {
+    font-family: 'Bitter', verdana;
+    text-anchor: middle;
+    fill: #3e3e4b;
+    text-shadow: 0 0 6px white;
+}
+
+.active {
+    text-shadow: 0 0 6px red;
+    cursor: grabbing;
+    cursor: -webkit-grabbing;
+}
+
+.borders {
+    stroke-width: 0.72px;
+    stroke: rgb(86, 86, 109);
+    stroke-dasharray: 0.5, 0.5;
+    stroke-linecap: butt;
+}
+
+.hills {
+    stroke-width: 0.1px;
+    fill: #999999;
+}
+
+.mounts {
+    stroke-width: 0.1px;
+    fill: white;
+}
+
+.strokes {
+    stroke-width: 0.08px;
+    width: 2px;
+    stroke: #5c5c70;
+    stroke-dasharray: 0.5, 0.7;
+    stroke-linecap: round;
+}
+
+.swamps {
+    stroke-width: 0.05px;
+    fill: none;
+    stroke: #5c5c70;
+}
+
+.forests {
+    stroke-width: 0.1px;
+    stroke: #5c5c70;
+}
+
+#options {
+    position: absolute;
+    background-color: white;
+    border: solid 1px #5e4fa2;
+    border-radius: 0 0 20px 0;
+    padding: 0 0 5px 5px;
+}
 
 .hexagon {
   fill: white;

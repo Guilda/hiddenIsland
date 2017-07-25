@@ -15,6 +15,7 @@
     "topojson": "^2.2.0",
     "topojson-client": "^3.0.0",
     "vue": "^2.1.10",
+    "vue-resize-directive": "^1.0.0",
     "vue-resource": "^1.2.1",
     "vue-router": "^2.2.0"
   },
@@ -46,6 +47,7 @@
     "url-loader": "^0.5.7",
     "vue-loader": "^10.3.0",
     "vue-style-loader": "^2.0.0",
+    "vue-svg-loader": "^0.1.2",
     "vue-template-compiler": "^2.1.10",
     "webpack": "^2.2.1",
     "webpack-bundle-analyzer": "^2.2.1",

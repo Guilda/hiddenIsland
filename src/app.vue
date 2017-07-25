@@ -1,6 +1,6 @@
 <template>
 
-  <div id="app">
+  <div id="app" >
     <router-view></router-view>
     <a href='#/'>
       <h1> EtherGuilds </h1>
@@ -14,10 +14,12 @@
 <script>
 
 import topNav from './components/navigation'
+import resize_handler from 'vue-resize-directive'
 
 export default {
   name: 'app',
-  components: { topNav }
+  components: { topNav },
+  directives: { resize_handler }
 }
 
 </script>
