@@ -29,6 +29,7 @@ var d3 = require("d3");
 import * as topojson from "topojson-client";
 import layout from './circle-layout'
 import resize from 'vue-resize-directive'
+import _ from 'underscore'
 
 window.uber_hack_context = ""
 
@@ -46,6 +47,7 @@ export default {
 
   methods: {
     getSize () {
+
       var width = this.$el.clientWidth
       var height = this.$el.clientHeight
       return { width, height }
@@ -61,8 +63,8 @@ export default {
     resize: function() {
       const size = this.getSize()
       const {g, svg, tree} = this.internaldata
-      svg.attr('width', size.width)
-       .attr('height', size.height)
+      // svg.attr('width', size.width)
+      //  .attr('height', size.height)
       this.transformSvg(g, size)
       layout.optimizeSize(tree, size, this.margin, this.textContraint)
       this.redraw()
@@ -74,22 +76,23 @@ export default {
     uber_hack_context = this;
 
     var margin = {top: -5, right: -5, bottom: -5, left: -5},
-    width = 960 - margin.left - margin.right,
-    height = 900 - margin.top - margin.bottom;
-
+    width = 2000,
+    height = 2000
     var zoom = d3.zoom()
-    .scaleExtent([1, 10])
+    .scaleExtent([1, 100])
     .on("zoom", zoomed);
 
     const size = this.getSize()
     const svg = d3.select("#map_svg")
-          .attr('width', size.width)
-          .attr('height', size.height)
+          // .attr('width', size.width)
+          // .attr('height', size.height)
     // const g = this.transformSvg(svg.append('g').call(zoom), size)
     // const g = svg.append('g').call(zoom)
 
 
     var radius = 20;
+
+    // console.log(size)
 
     var topology = hexTopology(radius, size.width, size.height);
 
@@ -104,11 +107,9 @@ export default {
     //     .on("dragend", dragended);
 
     function zoomed() {
-      // console.log("ZOOOMZOOOM")
-      // debugger
-      container.attr('transform', 'translate(' + d3.event.transform.x + ',' + d3.event.transform.y + ') scale(' + d3.event.transform.k + ')')
-      .call(zoom);
+      container_container.attr('transform', 'translate(' + d3.event.transform.x + ',' + d3.event.transform.y + ') scale(' + d3.event.transform.k + ')')
     }
+
 
     function dragstarted(d) {
       d3.event.sourceEvent.stopPropagation();
@@ -123,7 +124,12 @@ export default {
       d3.select(this).classed("dragging", false);
     }
 
-    var container = svg.append("g")
+
+    var container_container = svg.append("g")
+    var container = container_container.append("g")
+
+    svg.call(zoom)
+
 
     container.attr("class", "hexagon")
       .selectAll("path")
@@ -132,40 +138,40 @@ export default {
         .attr("d", function(d) { return path(topojson.feature(topology, d)); })
         .attr("class", function(d) { return d.fill ? "fill" : null; })
         .on("mousedown", mousedown)
-        .on("mousemove", mousemove)
-        .on("mouseup", mouseup)
-        .call(zoom)
+        // .on("mousemove", mousemove)
+        // .on("mouseup", mouseup)
 
-    container.append("path")
+    container_container.append("g").append("path")
         .datum(topojson.mesh(topology, topology.objects.hexagons))
         .attr("class", "mesh")
         .attr("d", path);
 
-    var border = container.append("path")
+    var border = container_container.append("g").append("path")
         .attr("class", "border")
         .call(redraw);
 
     var mousing = 0;
 
     function mousedown(d) {
-      mousing = d.fill ? -1 : +1;
-      mousemove.apply(this, arguments);
-
+      // mousing = d.fill ? -1 : +1;
+      // mousemove.apply(this, arguments);
+      //
       uber_hack_context.$router.push({ path: `/${d.x}/${d.y}`})
+      // border.call(redraw)
     }
-
-    function mousemove(d) {
-      if (mousing) {
-
-        d3.select(this).classed("fill", d.fill = mousing > 0);
-        border.call(redraw);
-      }
-    }
-
-    function mouseup() {
-      mousemove.apply(this, arguments);
-      mousing = 0;
-    }
+    //
+    // function mousemove(d) {
+    //   if (mousing) {
+    //
+    //     d3.select(this).classed("fill", d.fill = mousing > 0);
+    //     border.call(redraw);
+    //   }
+    // }
+    //
+    // function mouseup() {
+    //   mousemove.apply(this, arguments);
+    //   mousing = 0;
+    // }
 
     function redraw(border) {
       border.attr("d", path(topojson.mesh(topology, topology.objects.hexagons, function(a, b) { return a.fill ^ b.fill; })));
@@ -227,9 +233,22 @@ export default {
 <style>
 
 @import url('https://fonts.googleapis.com/css?family=Bitter:400,400i&subset=latin-ext');
+html, body {
+  margin:0;
+  padding:0;
+  overflow:hidden;
+}
+
 svg {
+    position:fixed; top:0; left:0; height:100%; width:100%;
     background-color: #5E4FA2;
     cursor: default;
+}
+
+#map
+{
+  width: 1280px;
+  height: 960px;
 }
 
 .terrs {
