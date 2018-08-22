@@ -3,7 +3,7 @@
   <div id="app" >
     <router-view></router-view>
     <a href='#/'>
-      <h1> EtherGuilds </h1>
+      <h1>EtherGuilds</h1>
     </a>
 
     <top-nav />

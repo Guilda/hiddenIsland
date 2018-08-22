@@ -1,6 +1,10 @@
+![EtherGuilds](https://raw.githubusercontent.com/dangerousbeans/etherGuilds/master/etherguilds.png)
+
 # EtherGuilds
 
-Technology lets us work together, to gather around ideas we like and build them
+Technology should help us gather around ideas we like and build them together.
+
+## Concept
 
 
 ## Todo:
@@ -10,4 +14,6 @@ Technology lets us work together, to gather around ideas we like and build them
 - [ ] filter based on location
 - [ ] Show unread posts on map
 - [ ] Show subject zones on map
+- [ ] Move massive map svg to other file
+- [ ] switch to procedurally generated infinity landscape
 - [ ] DAO Generator - let people establish settlements
