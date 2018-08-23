@@ -255,7 +255,7 @@ export default {
       // mousing = d.fill ? -1 : +1;
       // mousemove.apply(this, arguments);
       //
-      uber_hack_context.$router.push({ path: `/${d.x}/${d.y}`})
+      uber_hack_context.$router.push({ path: `/${d.i}/${d.j}`})
       // border.call(redraw)
     }
     //
