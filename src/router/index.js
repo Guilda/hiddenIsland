@@ -18,6 +18,5 @@ export default new VueRouter({
       name: 'Map',
       component: Map
     }
-    , ... demoRoutes
   ]
 })
