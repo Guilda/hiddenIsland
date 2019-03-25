@@ -9,12 +9,12 @@
 </template>
 
 <script>
-import { routes } from 'router/demos'
+// import { routes } from 'router/demos'
 
 export default {
   data () {
     return {
-      items: routes
+      // items: routes
     }
   }
 }

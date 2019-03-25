@@ -11,7 +11,7 @@ Advanced:
 <template>
   <div>
     <div id="map">
-      <MapSVG id="map_svg"></MapSVG>
+      <MapSVG id="map_svg" :key="map_key"></MapSVG>
     </div>
     <div>
       {{ $route.params.x }} / {{ $route.params.y }}
@@ -28,7 +28,6 @@ import MapSVG from './map.svg';
 import * as topojson from "topojson-client";
 import layout from './circle-layout'
 import resize from 'vue-resize-directive'
-import _ from 'underscore'
 
 window.uber_hack_context = ""
 
@@ -45,6 +44,11 @@ export default {
     MapSVG
   },
 
+  data () {
+    return { 
+      map_key: 1
+    }
+  },
 
   methods: {
     getSize () {
@@ -91,7 +95,6 @@ export default {
       var container_container = svg.insert("g", "#map_svg")
       var container = container_container.append("g")
 
-
       container.attr("class", "hexagon")
         .selectAll("path")
           .data(topology.objects.hexagons.geometries)
@@ -113,6 +116,8 @@ export default {
 
       function mousedown(d) {
         uber_hack_context.$router.push({ path: `/${d.i}/${d.j}`})
+
+        uber_hack_context.$data.map_key += 1 
       }
 
       function draw_border(border) {
@@ -183,9 +188,10 @@ export default {
     this.inital_draw()
     this.redraw()
   },
-
   updated: function() {
-    this.redraw()    
+
+    this.inital_draw()
+    this.redraw()
   }
 }
 </script>
