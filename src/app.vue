@@ -1,10 +1,13 @@
 <template>
 
   <div id="app" >
-    <router-view></router-view>
     <a href='#/'>
       <h1> EtherGuilds </h1>
     </a>
+
+
+    <router-view></router-view>
+    
 
     <top-nav />
 

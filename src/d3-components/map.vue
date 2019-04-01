@@ -13,9 +13,20 @@ Advanced:
     <div id="map">
       <MapSVG id="map_svg" :key="map_key"></MapSVG>
     </div>
-    <div>
-      {{ $route.params.x }} / {{ $route.params.y }}
+
+    <div id="thread_container" class="card" style="width: 18rem;">
+      <ul id="status" class="card-body list-unstyled">
+      <li class="media">
+        <div class="media-body">
+          {{ $route.params.x }} / {{ $route.params.y }}
+
+          No Nearby Messages
+        </div>
+      </li>
+    </ul>  
     </div>
+
+    
   </div>
 </template>
 
@@ -205,9 +216,17 @@ html, body {
   overflow:hidden;
 }
 
+
+#thread_container
+{
+  position: absolute;
+  margin-left: 60%;
+  top: 300px;
+}
+
 svg {
     position:fixed; top:0; left:0; height:100%; width:100%;
-    background-color: #5E4FA2;
+    background-color: transparent;
     cursor: default;
 }
 
@@ -215,61 +234,6 @@ svg {
 {
   width: 1280px;
   height: 960px;
-}
-
-.terrs {
-    stroke-width: 0.67px;
-    stroke-linejoin: round;
-    stroke-linecap: round;
-    -webkit-filter: saturate(0.8) contrast(1.1);
-    filter: saturate(0.8) contrast(1.1);
-}
-
-.areas {
-    stroke-width: 0.67px;
-    stroke-linejoin: round;
-    stroke-linecap: round;
-    opacity: 0.8;
-}
-
-.rivers {
-    fill: none;
-    stroke: #4D83AE;
-    stroke-width: 0.4px;
-    stroke-linecap: round;
-}
-
-.coastline {
-    stroke-width: 0.74px;
-    stroke: rgb(86, 86, 109);
-    stroke-linecap: round;
-}
-
-.burgs {
-    stroke-width: 0.2px;
-    opacity: 0.8;
-    font-family: verdana;
-    font-size: 2px;
-    text-anchor: middle;
-    cursor: pointer;
-}
-
-.capital {
-    fill: white;
-    stroke: black;
-    opacity: 0.8;
-}
-
-.manor {
-    stroke: none;
-    fill: black;
-    opacity: 0.8;
-}
-
-.capital:hover,
-.manor:hover {
-    stroke: blue;
-    cursor: pointer;
 }
 
 .names {
@@ -283,50 +247,6 @@ svg {
     text-shadow: 0 0 6px red;
     cursor: grabbing;
     cursor: -webkit-grabbing;
-}
-
-.borders {
-    stroke-width: 0.72px;
-    stroke: rgb(86, 86, 109);
-    stroke-dasharray: 0.5, 0.5;
-    stroke-linecap: butt;
-}
-
-.hills {
-    stroke-width: 0.1px;
-    fill: #999999;
-}
-
-.mounts {
-    stroke-width: 0.1px;
-    fill: white;
-}
-
-.strokes {
-    stroke-width: 0.08px;
-    width: 2px;
-    stroke: #5c5c70;
-    stroke-dasharray: 0.5, 0.7;
-    stroke-linecap: round;
-}
-
-.swamps {
-    stroke-width: 0.05px;
-    fill: none;
-    stroke: #5c5c70;
-}
-
-.forests {
-    stroke-width: 0.1px;
-    stroke: #5c5c70;
-}
-
-#options {
-    position: absolute;
-    background-color: white;
-    border: solid 1px #5e4fa2;
-    border-radius: 0 0 20px 0;
-    padding: 0 0 5px 5px;
 }
 
 .hexagon {
