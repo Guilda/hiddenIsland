@@ -18,15 +18,12 @@ Advanced:
       <ul id="status" class="card-body list-unstyled">
       <li class="media">
         <div class="media-body">
-          {{ $route.params.x }} / {{ $route.params.y }}
-
-          No Nearby Messages
+          <strong class="font-weight-light">#</strong> {{ $route.params.x }} / {{ $route.params.y }}
         </div>
       </li>
     </ul>  
     </div>
 
-    
   </div>
 </template>
 
@@ -42,7 +39,6 @@ import resize from 'vue-resize-directive'
 
 window.uber_hack_context = ""
 
-
 const directives = {
   resize
 }
@@ -57,7 +53,8 @@ export default {
 
   data () {
     return { 
-      map_key: 1
+      map_key: 1,
+      messages: [ ]
     }
   },
 
@@ -225,15 +222,17 @@ html, body {
 }
 
 svg {
-    position:fixed; top:0; left:0; height:100%; width:100%;
-    background-color: transparent;
-    cursor: default;
+  background-color: transparent;
+  cursor: default;
 }
 
 #map
 {
-  width: 1280px;
-  height: 960px;
+  background-image: url('/static/fantasy_map_1554102582670.png');
+  background-size: 100%;
+
+  width: 2280px;
+  height: 1960px;
 }
 
 .names {
@@ -261,10 +260,12 @@ svg {
 
 .hexagon :hover {
   fill: pink;
+  fill-opacity: 0.7;
 }
 
 .hexagon .fill {
   fill: pink;
+  fill-opacity: 0.7;
 }
 
 .mesh {
