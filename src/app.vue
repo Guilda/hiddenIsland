@@ -1,10 +1,14 @@
 <template>
 
   <div id="app" >
+    <nav class="navbar navbar-dark bg-dark">
+      <a class="navbar-brand" href="#/">
+        ⬣ ssb guilds
+      </a>
+    </nav>
+
+
     <router-view></router-view>
-    <a href='#/'>
-      <h1>EtherGuilds</h1>
-    </a>
 
     <top-nav />
 
@@ -30,10 +34,26 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   /*text-align: center;*/
-  margin-top: 30px;
 }
+
+.navbar
+{
+  position: absolute;
+  width: 100%;
+}
+
+.bg-dark
+{
+  background-color: rgba(20,20,20,0.5) !important;
+  color: white !important;
+}
+
 a {
   color: black;
   text-decoration: none;
+}
+
+.hexagon path {
+    transition: fill 250ms linear;
 }
 </style>
